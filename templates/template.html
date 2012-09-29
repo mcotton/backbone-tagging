@@ -10,16 +10,6 @@
         <script src="/js/vendor/backbone.js"></script>
         <script src="/js/app.js"></script>
 
-        <script type="text/template" id="album-template">
-            <span class="album-title"><%= title %></span>
-            <span class="artist-name"><%= artist %></span>
-            <ol class="tracks">
-                <% _.each(tracks, function(track) { %>
-                <li><%= track.title %></li>
-                <% }); %>
-            </ol>
-        </script>
-
     {% block head %}{% endblock %}
     
   </head> 
@@ -29,6 +19,5 @@
 	
     {% block footer %}{% endblock %}
 
-    {% profiler_includes %}
   </body> 
 </html>

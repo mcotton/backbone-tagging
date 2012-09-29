@@ -26,12 +26,61 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 #  from google.appengine.api import memcache
 #  from google.appengine.api import taskqueue
 
+from django.utils import simplejson
+
 from usermodels import *  #I'm storing my models in usermodels.py
 
 
 class MainHandler(webapp.RequestHandler):
   def get(self):
     render_template(self, 'templates/index.html')
+
+class JSONLast5Handler(webapp.RequestHandler):
+  def get(self):
+    p = Picture.gql("order by when_created desc limit 5")
+    
+    pictures = []
+    for i in p:
+      tmp = {
+        'id': i.key().id(),
+        'name': i.name,
+        'path': i.path,
+        'tags': i.tags.split(',')
+      }
+      pictures.append(tmp)
+      
+      
+    output = {
+      'pictures': pictures
+    }
+    render_json(self, output)
+
+class JSONByIDHandler(webapp.RequestHandler):
+  def get(self, resource=''):
+    if resource == '':
+      self.error(404)
+    
+    try:  
+      p = Picture.get_by_id(int(resource))
+      key = p.key()
+    except:
+      self.error(404)
+      return
+      
+    pictures = []
+    tmp = {
+      'id': key.id(),
+      'name': p.name,
+      'path': p.path,
+      'tags': p.tags.split(',')
+    }
+    pictures.append(tmp)
+      
+      
+    output = {
+      'pictures': pictures
+    }
+    render_json(self, output)
 
 def is_local():
   # Turns on debugging error messages if on local env  
@@ -42,16 +91,14 @@ def render_template(call_from, template_name, template_values=dict()):
   path = os.path.join(os.path.dirname(__file__), template_name)
   call_from.response.out.write(template.render(path, template_values))
 
-def main():
-  application = webapp.WSGIApplication([('/', MainHandler)],
-                                         debug = is_local())
-                                         
+def render_json(self, data):
+  self.response.headers['Content-Type'] = 'application/json'
+  self.response.out.write(simplejson.dumps(data))
   
-  from gae_mini_profiler import profiler
-  application = profiler.ProfilerWSGIMiddleware(application)
-
-  wsgiref.handlers.CGIHandler().run(application)
 
 
-if __name__ == '__main__':
-  main()
+app = webapp.WSGIApplication([('/', MainHandler),
+                              ('/last5.json', JSONLast5Handler),
+                              ('/id/([^/]+)?.json', JSONByIDHandler)],
+                              debug = is_local())
+                                         

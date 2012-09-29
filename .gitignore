@@ -1,3 +1,5 @@
 .DS_Store
 usermodels.pyc
 datastore
+*.pyc
+
