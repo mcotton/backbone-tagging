@@ -35,9 +35,9 @@ class MainHandler(webapp.RequestHandler):
   def get(self):
     render_template(self, 'templates/index.html')
 
-class JSONLast5Handler(webapp.RequestHandler):
+class JSONPicturesHandler(webapp.RequestHandler):
   def get(self):
-    p = Picture.gql("order by when_created desc limit 5")
+    p = Picture.gql("order by when_created desc limit 10")
     
     pictures = []
     for i in p:
@@ -55,7 +55,7 @@ class JSONLast5Handler(webapp.RequestHandler):
     }
     render_json(self, output)
 
-class JSONByIDHandler(webapp.RequestHandler):
+class JSONPicturesByIDHandler(webapp.RequestHandler):
   def get(self, resource=''):
     if resource == '':
       self.error(404)
@@ -76,11 +76,27 @@ class JSONByIDHandler(webapp.RequestHandler):
     }
     pictures.append(tmp)
       
-      
     output = {
       'pictures': pictures
     }
     render_json(self, output)
+    
+  def put(self, resource=''):
+    if resource == '':
+      self.error(404)
+    
+    data = simplejson.loads(self.request.body)
+    
+    p = Picture.get_by_id(int(resource))
+    
+    p.name = data['name']
+    p.path = data['path']
+    p.tags = ','.join(data['tags'])
+    
+    p.save()
+    
+    self.response.set_status(200) 
+    
 
 def is_local():
   # Turns on debugging error messages if on local env  
@@ -98,7 +114,7 @@ def render_json(self, data):
 
 
 app = webapp.WSGIApplication([('/', MainHandler),
-                              ('/last5.json', JSONLast5Handler),
-                              ('/id/([^/]+)?.json', JSONByIDHandler)],
+                              ('/pictures', JSONPicturesHandler),
+                              ('/pictures/([^/]+)?', JSONPicturesByIDHandler)],
                               debug = is_local())
                                          

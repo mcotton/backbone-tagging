@@ -10,7 +10,7 @@ $(document).ready(function() {
     
     window.PictureList = Backbone.Collection.extend({
       model: Picture,
-      url: '/last5.json',
+      url: '/pictures',
       
       parse: function(response) {
         return response.pictures
@@ -27,18 +27,23 @@ $(document).ready(function() {
         
         template: _.template($("#picture-template").html()),
 
-        events: {},
+        events: {
+            'click img': function() {
+                var str = prompt('Add a tag: ')
+                tags = this.model.get('tags')
+                tags.push(str)
+                this.model.set({tags: tags})
+                this.trigger('add_a_tag')
+            }
+        },
         
         initialize: function() {
             this.model.bind('change', this.render, this)
+            this.on('add_a_tag', this.render, this)
         },
         
         render: function() {
-            
-            //var dict = this.model.toJSON();
-            //var html = this.template(dict);
-            //$(this.el).append(html);
-
+            console.log('calling render() on pictureview')
             this.$el.html(this.template(this.model.toJSON()))
             return this
         }
@@ -59,7 +64,9 @@ $(document).ready(function() {
             Pictures.fetch()
         },
         
-        render: function() {},
+        render: function() {
+            console.log('calling render() on appview')
+        },
         
         addOne: function(picture) {
             var view = new PictureView({model: picture})
