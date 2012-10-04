@@ -1,0 +1,33 @@
+
+#pictures {
+    width: 100%;
+    height: 200px;
+    overflow-x: scroll;
+    display:inline;
+    background-color: yellow;
+}
+
+.pictures {
+    width: 90%;
+    margin: 0 auto;
+    
+}
+
+.pictures img {
+    width: 200px;
+    height: 200px;
+}
+.tags {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 10;
+    top: -20px;
+}
+
+.tags li {
+    list-style-type: none;
+    background-color: yellow;
+    display: inline;
+    padding: .2em 1em;
+}

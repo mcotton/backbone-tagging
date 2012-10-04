@@ -1,9 +1,29 @@
 {% extends "template.html" %}
 
-{% block head %} {% endblock %}
+{% block head %} 
+    <script type="text/template" id="picture-template">
+      <span class=""><img src="<%= path %>"></span>
+      <ul class="tags">
+        <% _.each(tags, function(tag) { %>
+          <li><%= tag %></li>
+        <% }); %>
+      </ul>
+    </script>
+    
+    <script type="text/template" id="template-contact">
+        <h1>Picture Template</h1>
+    </script>
+    
+    <script type="text/template" id="RootView">
+        <h1>Picture Template</h1>
+    </script>
+{% endblock %}
 
 {% block container %}
-        <h1>first try with backbone</h1> 
+    <h1>Pictures</h1>
+    <p>Do you like pictures?  We like pictures too.  Lets look at pictures together.  Or you can use our API and share them however you want.</p>    
+    <div id='pictures'></div>
+         
 {% endblock %}
 
 
