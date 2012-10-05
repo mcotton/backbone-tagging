@@ -28,7 +28,7 @@ $(document).ready(function() {
         template: _.template($("#picture-template").html()),
 
         events: {
-            'click .tags li': 'removeTag',
+            'click .tags li': 'filterTag',
             'click img': 'addTag' 
         },
         
@@ -43,14 +43,19 @@ $(document).ready(function() {
             return this
         },
         
+        filterTag: function(item) {
+            console.log($(item.target).html())
+        },
+        
         removeTag: function(item) {
             $(item.target).remove()
-            console.log(this.model.toJSON())
-            tags = $(item).find('li').each(function(item) {
-                return item.innerHTML 
+            //console.log(this.model.toJSON())
+            tmptags = []
+            _.each($(item).find('li'), function(item) {
+                tmptags.append(item.innerHTML) 
             })
-            console.log(tags)
-            //this.model.set({'tags': tags})
+            console.log(tmptags)
+            //this.model.set({'tags': tmptags})
         },
             
         addTag: function() {
