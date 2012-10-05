@@ -11,8 +11,6 @@ import os
 
 # They are changing Django version, need to include this
 # http://code.google.com/appengine/docs/python/tools/libraries.html#Django
-from google.appengine.dist import use_library
-use_library('django', '1.2')
 from google.appengine.ext.webapp import template
 
 import wsgiref.handlers, logging
@@ -39,13 +37,15 @@ class JSONPicturesHandler(webapp.RequestHandler):
   def get(self):
     p = Picture.gql("order by when_created desc limit 10")
     
-    pictures = []
+    pictures = []    
     for i in p:
+      tags = []
+
       tmp = {
         'id': i.key().id(),
         'name': i.name,
         'path': i.path,
-        'tags': i.tags.split(',')
+        'tags': [i for i in i.tags.split(',') if i != '']
       }
       pictures.append(tmp)
       
@@ -54,6 +54,17 @@ class JSONPicturesHandler(webapp.RequestHandler):
       'pictures': pictures
     }
     render_json(self, output)
+    
+  def post(self, resource=''):
+    data = simplejson.loads(self.request.body)
+    
+    p = Picture()
+    p.name = data['name']
+    p.path = data['path']
+    p.tags = ','.join(data['tags'])    
+    p.save()
+    
+    self.response.set_status(201)
 
 class JSONPicturesByIDHandler(webapp.RequestHandler):
   def get(self, resource=''):
@@ -88,15 +99,15 @@ class JSONPicturesByIDHandler(webapp.RequestHandler):
     data = simplejson.loads(self.request.body)
     
     p = Picture.get_by_id(int(resource))
-    
     p.name = data['name']
     p.path = data['path']
     p.tags = ','.join(data['tags'])
-    
     p.save()
     
-    self.response.set_status(200) 
-    
+  
+  
+
+
 
 def is_local():
   # Turns on debugging error messages if on local env  

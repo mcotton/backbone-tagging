@@ -33,6 +33,7 @@ $(document).ready(function() {
                 tags = this.model.get('tags')
                 tags.push(str)
                 this.model.set({tags: tags})
+                Backbone.sync('update', this.model)
                 this.trigger('add_a_tag')
             }
         },
@@ -50,8 +51,6 @@ $(document).ready(function() {
     })
 
     window.AppView = Backbone.View.extend({
-    
-        el: $('#RootView'),
         
         events: {},
         
