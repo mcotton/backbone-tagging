@@ -28,7 +28,7 @@ $(document).ready(function() {
         template: _.template($("#picture-template").html()),
 
         events: {
-            'click img': function() {
+            'click': function() {
                 var str = prompt('Add a tag: ')
                 tags = this.model.get('tags')
                 tags.push(str)

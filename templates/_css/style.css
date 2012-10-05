@@ -4,14 +4,21 @@
 }
 
 .pictures {
-    width: 90%;
     margin: 0 auto;
+    display: inline-block;
+    float: left;
+    position: relative;
+    overflow-x: none;
+    overflow-y: scroll;
+    height: 250px;
     
 }
 
 .pictures img {
     width: 200px;
     height: 200px;
+    display: inline-block;
+    float: left;
 }
 .tags {
     margin: 0;
