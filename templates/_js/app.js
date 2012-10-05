@@ -28,14 +28,8 @@ $(document).ready(function() {
         template: _.template($("#picture-template").html()),
 
         events: {
-            'click': function() {
-                var str = prompt('Add a tag: ')
-                tags = this.model.get('tags')
-                tags.push(str)
-                this.model.set({tags: tags})
-                Backbone.sync('update', this.model)
-                this.trigger('add_a_tag')
-            }
+            'click .tags li': 'removeTag',
+            'click img': 'addTag' 
         },
         
         initialize: function() {
@@ -47,6 +41,25 @@ $(document).ready(function() {
             console.log('calling render() on pictureview')
             this.$el.html(this.template(this.model.toJSON()))
             return this
+        },
+        
+        removeTag: function(item) {
+            $(item.target).remove()
+            console.log(this.model.toJSON())
+            tags = $(item).find('li').each(function(item) {
+                return item.innerHTML 
+            })
+            console.log(tags)
+            //this.model.set({'tags': tags})
+        },
+            
+        addTag: function() {
+            var str = prompt('Add a tag: ')
+            tags = this.model.get('tags')
+            tags.push(str)
+            this.model.set({tags: tags})
+            Backbone.sync('update', this.model)
+            this.trigger('add_a_tag')
         }
     })
 
