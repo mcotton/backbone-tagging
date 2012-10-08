@@ -2,16 +2,7 @@
 
 {% block head %} 
     <script type="text/template" id="picture-template">
-      <img src="<%= path %>">
-      <ul class="tags">
-        <% _.each(tags, function(tag) { %>
-          <li><%= tag %></li>
-        <% }); %>
-      </ul>
-    </script>
-    
-    <script type="text/template" id="picture-filtered">
-      <img src="<%= path %>">
+      <img src="<%= path %>" class="roundedCorners">
       <ul class="tags">
         <% _.each(tags, function(tag) { %>
           <li><%= tag %></li>
@@ -23,8 +14,35 @@
         <h1>Picture Template</h1>
     </script>
     
-    <script type="text/template" id="RootView">
-        <h1>Picture Template</h1>
+    <script>
+    $(document).ready(function() {
+        // Script to round the corners of images
+    
+        function hasBorderRadius() {
+            var d = document.createElement("div").style;
+            if (typeof d.borderRadius !== "undefined") return true;
+            if (typeof d.WebkitBorderRadius !== "undefined") return true;
+            if (typeof d.MozBorderRadius !== "undefined") return true;
+            return false;
+        }
+        
+        if(hasBorderRadius())  {
+            $('img.reoundedCorners').each(function() {
+                $(this).wrap('<div class='roundedCorners' />');
+                var imgSrc = $(this).attr('src')
+                var imgHeight = 200
+                var imgWidth = 200
+                $(this).parent()
+                    .css('background-image', 'url(' + imgSrc + ')')
+                    .css('background-repeat', 'no-repeat')
+                    .css('height', imgHeight + 'px')
+                    .css('width', imgWidth + 'px')
+                $(this).remote()
+            }) 
+        
+        }
+        
+    })
     </script>
 {% endblock %}
 
