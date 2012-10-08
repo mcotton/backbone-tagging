@@ -30,7 +30,7 @@ from usermodels import *  #I'm storing my models in usermodels.py
 
 
 class MainHandler(webapp.RequestHandler):
-  def get(self):
+  def get(self, resource=''):
     render_template(self, 'templates/index.html')
 
 class JSONPicturesHandler(webapp.RequestHandler):
@@ -125,6 +125,7 @@ def render_json(self, data):
 
 
 app = webapp.WSGIApplication([('/', MainHandler),
+                              ('/tag/([^/]+)?', MainHandler), #backbone.js route
                               ('/pictures', JSONPicturesHandler),
                               ('/pictures/([^/]+)?', JSONPicturesByIDHandler)],
                               debug = is_local())

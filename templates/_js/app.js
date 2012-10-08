@@ -49,7 +49,6 @@ $(document).ready(function() {
         },
         
         render: function() {
-            console.log('calling render() on pictureview')
             this.$el.html(this.template(this.model.toJSON()))
             return this
         },
@@ -59,18 +58,15 @@ $(document).ready(function() {
             var lstModels = _.filter(this.model.collection.models, function(tag) {
               return tag.hasTag(filterWord)
             })
-            this.model.collection.trigger('filter', lstModels)
+            Path.navigate("tag/" + filterWord, {trigger: true, replace: true});
         },
         
         removeTag: function(item) {
             $(item.target).remove()
-            //console.log(this.model.toJSON())
             tmptags = []
             _.each($(item).find('li'), function(item) {
                 tmptags.append(item.innerHTML) 
             })
-            console.log(tmptags)
-            //this.model.set({'tags': tmptags})
         },
             
         addTag: function() {
@@ -88,17 +84,17 @@ $(document).ready(function() {
         events: {},
         
         initialize: function() {
-            
+                        
             Pictures.bind('add', this.addOne, this)
             Pictures.bind('reset', this.addAll, this)
             Pictures.bind('all', this.render, this)
             Pictures.bind('filter', this.filterTags, this)
             
             Pictures.fetch()
+            
         },
         
         render: function() {
-            console.log('calling render() on appview')
         },
         
         addOne: function(picture) {
@@ -117,5 +113,30 @@ $(document).ready(function() {
     
     })
     
+    window.Paths = Backbone.Router.extend({
+    
+        initialize: function() {
+            
+        },
+        
+        routes: {
+            'tag/:word': 'filterTag'
+        },
+        
+        filterTag: function(word) {
+            window.filteredModels = _.filter(Pictures.models, function(tag) {
+              return tag.hasTag(word)
+            })
+            Pictures.trigger('filter', filteredModels)
+                    
+        }
+        
+        
+    })
+    
+    window.Path = new Paths()
+    
+    
     var App = new AppView()
+    Backbone.history.start({pushState: true})
 });
