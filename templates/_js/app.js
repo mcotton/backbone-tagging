@@ -6,6 +6,17 @@ $(document).ready(function() {
         // name: '',
         // path: '',
         // tags: []
+        
+        hasTag: function(tag) {
+            var tags = this.get('tags')
+            for(var i=0; i<tags.length; i++) {
+                if(tags[i] == tag) { 
+                  return true
+                }
+            }
+            return false  
+        }
+        
     })
     
     window.PictureList = Backbone.Collection.extend({
@@ -44,7 +55,11 @@ $(document).ready(function() {
         },
         
         filterTag: function(item) {
-            console.log($(item.target).html())
+            var filterWord = $(item.target).html()
+            var lstModels = _.filter(this.model.collection.models, function(tag) {
+              return tag.hasTag(filterWord)
+            })
+            this.model.collection.trigger('filter', lstModels)
         },
         
         removeTag: function(item) {
@@ -77,6 +92,7 @@ $(document).ready(function() {
             Pictures.bind('add', this.addOne, this)
             Pictures.bind('reset', this.addAll, this)
             Pictures.bind('all', this.render, this)
+            Pictures.bind('filter', this.filterTags, this)
             
             Pictures.fetch()
         },
@@ -92,6 +108,11 @@ $(document).ready(function() {
         
         addAll: function() {
             Pictures.each(this.addOne)
+        },
+        
+        filterTags: function(items) {
+            $('#pictures').empty()
+            _.each(items, this.addOne)
         }
     
     })

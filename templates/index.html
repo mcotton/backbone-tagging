@@ -10,6 +10,15 @@
       </ul>
     </script>
     
+    <script type="text/template" id="picture-filtered">
+      <img src="<%= path %>">
+      <ul class="tags">
+        <% _.each(tags, function(tag) { %>
+          <li><%= tag %></li>
+        <% }); %>
+      </ul>
+    </script>
+    
     <script type="text/template" id="template-contact">
         <h1>Picture Template</h1>
     </script>
