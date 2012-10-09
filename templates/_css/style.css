@@ -14,7 +14,7 @@ body {
     position: relative;
     overflow-x: none;
     overflow-y: scroll;
-    height: 250px;
+    height: 300px;
     
 }
 
@@ -23,6 +23,7 @@ body {
     height: 200px;
     display: inline-block;
     float: left;
+    margin-bottom: 5px;
 }
 .tags {
     margin: 0;
@@ -32,9 +33,9 @@ body {
 
 .tags li {
     list-style-type: none;
-    background-color: yellow;
+    background-color: rgba(0,0,255,0.1);
     display: inline;
-    padding: .2em 1em;
+    padding: .1em .1em .1em .1em;
 }
 
 .roundedCorners {
